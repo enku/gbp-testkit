@@ -5,7 +5,7 @@ description = "Gentoo Build Publisher testing tools"
 authors = [
     {name = "Albert Hopkins", email = "marduk@letterboxes.org"},
 ]
-dependencies = ["factory-boy>=3.3.3", "django>=5.1.6", "unittest-fixtures @ git+https://github.com/enku/unittest-fixtures.git", "gentoo-build-publisher>=2.3.0"]
+dependencies = ["factory-boy>=3.3.3", "django>=5.1.6", "unittest-fixtures @ git+https://github.com/enku/unittest-fixtures.git"]
 requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "GPL3+"}
@@ -14,10 +14,6 @@ license = {text = "GPL3+"}
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
-
-[tool.pdm]
-distribution = true
-version = { source = "scm" }
 
 [dependency-groups]
 dev = [
@@ -29,6 +25,7 @@ dev = [
     "coverage[toml]>=7.6.12",
     "pylint-django>=2.6.1",
     "django-stubs>=5.1.3",
+    "gentoo-build-publisher>=2.3.0",
 ]
 
 [tool.black]
@@ -56,3 +53,8 @@ multi_line_output = 3
 [tool.coverage.run]
 branch = true
 source = ["gbp_testkit"]
+
+[tool.pdm]
+distribution = true
+version = { source = "scm" }
+
