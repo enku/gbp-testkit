@@ -13,11 +13,6 @@ import gbpcli
 from django.test.client import Client
 from gbpcli.config import AuthDict, Config
 from gbpcli.gbp import GBP
-from requests import Response, Session
-from requests.adapters import BaseAdapter
-from requests.structures import CaseInsensitiveDict
-from yarl import URL
-
 from gentoo_build_publisher import publisher
 from gentoo_build_publisher.cli import apikey
 from gentoo_build_publisher.jenkins import (
@@ -27,6 +22,10 @@ from gentoo_build_publisher.jenkins import (
     ProjectPath,
 )
 from gentoo_build_publisher.types import ApiKey, Build
+from requests import Response, Session
+from requests.adapters import BaseAdapter
+from requests.structures import CaseInsensitiveDict
+from yarl import URL
 
 BASE_DIR = Path(__file__).resolve().parent / "data"
 LOCAL_TIMEZONE = dt.timezone(dt.timedelta(days=-1, seconds=61200), "PDT")

@@ -16,12 +16,11 @@ from gbp_testkit.factories import (
 )
 from gbp_testkit.helpers import MockJenkinsSession, Tree
 
-FixtureOptions = fixture.FixtureOptions
 Fixtures = fixture.Fixtures
 TestCase = fixture.BaseTestCase
 
 
-def builder_fixture(_options: FixtureOptions, _fixtures: Fixtures) -> ArtifactFactory:
+def builder_fixture(_options: None, _fixtures: Fixtures) -> ArtifactFactory:
     return ArtifactFactory(initial_packages=[])
 
 

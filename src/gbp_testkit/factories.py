@@ -11,7 +11,6 @@ from itertools import product
 from typing import Generator
 
 import factory
-
 from gentoo_build_publisher import build_publisher, publisher
 from gentoo_build_publisher.models import BuildModel
 from gentoo_build_publisher.records import BuildRecord, Repo

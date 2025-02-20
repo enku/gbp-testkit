@@ -1283,10 +1283,10 @@ files = [
 
 [[package]]
 name = "unittest-fixtures"
-version = "0.1.dev38"
+version = "0.1.dev46"
 requires_python = ">=3.11"
 git = "https://github.com/enku/unittest-fixtures.git"
-revision = "20facc3bb2163dbf50b579154cb9c7e6c1bc0723"
+revision = "8cf4decb39a13c4c5f686a253e021452601a257e"
 summary = "A small library for loading unittest fixtures"
 groups = ["default"]
 
