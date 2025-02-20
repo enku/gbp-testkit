@@ -5,7 +5,7 @@ description = "Gentoo Build Publisher testing tools"
 authors = [
     {name = "Albert Hopkins", email = "marduk@letterboxes.org"},
 ]
-dependencies = ["factory-boy>=3.3.3", "django>=5.1.6", "unittest-fixtures @ git+https://github.com/enku/unittest-fixtures.git"]
+dependencies = ["factory-boy>=3.3.3", "django>=5.1.6", "unittest-fixtures @ git+https://github.com/enku/unittest-fixtures.git", "types-requests>=2.32.0.20241016"]
 requires-python = ">=3.11"
 readme = "README.md"
 license = {text = "GPL3+"}
