@@ -2,18 +2,19 @@
 
 # pylint: disable=missing-class-docstring,missing-function-docstring
 import logging
+import unittest
 
 import django.test
-import unittest_fixtures as fixture
+from unittest_fixtures import where
 
 logging.basicConfig(handlers=[logging.NullHandler()])
 
 
-@fixture.requires()
-class TestCase(fixture.BaseTestCase):
-    options = {"records_backend": "memory"}
+@where(environ={"BUILD_PUBLISHER_STORAGE_PATH": "memory"})
+class TestCase(unittest.TestCase):
+    pass
 
 
-@fixture.requires()
-class DjangoTestCase(TestCase, django.test.TestCase):
-    options = {"records_backend": "django"}
+@where(environ={"BUILD_PUBLISHER_STORAGE_PATH": "django"})
+class DjangoTestCase(django.test.TestCase):
+    pass

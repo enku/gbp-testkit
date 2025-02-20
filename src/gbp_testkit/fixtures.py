@@ -31,7 +31,7 @@ from gentoo_build_publisher.storage import Storage
 from gentoo_build_publisher.types import ApiKey, Build
 from gentoo_build_publisher.utils import time
 from rich.theme import Theme
-from unittest_fixtures import FixtureContext, Fixtures, depends
+from unittest_fixtures import FixtureContext, Fixtures, fixture
 
 from .factories import BuildFactory, BuildModelFactory, BuildPublisherFactory
 from .helpers import MockJenkins, create_user_auth, test_gbp
@@ -40,12 +40,13 @@ COUNTER = 0
 now = partial(dt.datetime.now, tz=dt.UTC)
 
 
+@fixture()
 def tmpdir(_options: None, _fixtures: Fixtures) -> FixtureContext[Path]:
     with tempfile.TemporaryDirectory() as tempdir:
         yield Path(tempdir)
 
 
-@depends("tmpdir")
+@fixture("tmpdir")
 def environ(
     options: dict[str, Any] | None, fixtures: Fixtures
 ) -> FixtureContext[dict[str, str]]:
@@ -66,12 +67,12 @@ def environ(
         yield mock_environ
 
 
-@depends("environ")
+@fixture("environ")
 def settings(_options: None, _fixtures: Fixtures) -> Settings:
     return Settings.from_environ()
 
 
-@depends("environ")
+@fixture("environ")
 def publisher(_o: None, _f: Fixtures) -> FixtureContext[BuildPublisher]:
     bp: BuildPublisher = BuildPublisherFactory()
 
@@ -86,7 +87,7 @@ def publisher(_o: None, _f: Fixtures) -> FixtureContext[BuildPublisher]:
         yield bp
 
 
-@depends("publisher")
+@fixture("publisher")
 def gbp(options: dict[str, Any] | None, _fixtures: Fixtures) -> GBP:
     options = options or {}
     user = options.get("user", "test_user")
@@ -96,7 +97,7 @@ def gbp(options: dict[str, Any] | None, _fixtures: Fixtures) -> GBP:
     )
 
 
-@depends()
+@fixture()
 def console(_options: None, _fixtures: Fixtures) -> FixtureContext[Console]:
     out = io.StringIO()
     err = io.StringIO()
@@ -118,7 +119,7 @@ def console(_options: None, _fixtures: Fixtures) -> FixtureContext[Console]:
         c.out.save_svg(filename, title="Gentoo Build Publisher")
 
 
-@depends("publisher")
+@fixture("publisher")
 def api_keys(options: dict[str, Any] | None, fixtures: Fixtures) -> list[ApiKey]:
     options = options or {}
     names = options.get("api_key_names", ["test_api_key"])
@@ -134,6 +135,7 @@ def api_keys(options: dict[str, Any] | None, fixtures: Fixtures) -> list[ApiKey]
     return keys
 
 
+@fixture()
 def records_db(options: dict[str, Any], _fixtures: Fixtures) -> RecordDB:
     [module] = importlib.metadata.entry_points(
         group="gentoo_build_publisher.records", name=options["records_backend"]
@@ -143,6 +145,7 @@ def records_db(options: dict[str, Any], _fixtures: Fixtures) -> RecordDB:
     return db
 
 
+@fixture()
 def build_model(options: dict[str, Any] | None, _fixtures: Fixtures) -> BuildModel:
     options = options or {}
     built: dt.datetime = options.get("built") or now()
@@ -155,7 +158,7 @@ def build_model(options: dict[str, Any] | None, _fixtures: Fixtures) -> BuildMod
     return bm
 
 
-@depends(records_db, build_model)
+@fixture("records_db", "build_model")
 def record(options: dict[str, Any] | None, fixtures: Fixtures) -> BuildRecord:
     options = options or {}
     bm: BuildModel = fixtures.build_model
@@ -167,21 +170,24 @@ def record(options: dict[str, Any] | None, fixtures: Fixtures) -> BuildRecord:
     return db.get(Build.from_id(str(fixtures.build_model)))
 
 
+@fixture()
 def clock(options: dt.datetime | None, _fixtures: Fixtures) -> dt.datetime:
     if options:
         return options
     return now()
 
 
-@depends("publisher")
+@fixture("publisher")
 def client(_options: None, _fixtures: Fixtures) -> Client:
     return Client()
 
 
+@fixture()
 def build(_options: None, _fixtures: Fixtures) -> Build:
     return BuildFactory()
 
 
+@fixture()
 def builds(
     options: dict[str, Any] | None, _fixtures: Fixtures
 ) -> dict[str, list[Build]] | list[Build]:
@@ -197,7 +203,7 @@ def builds(
     return builds_map
 
 
-@depends(builds, publisher)
+@fixture("builds", "publisher")
 def pulled_builds(_options: None, fixtures: Fixtures) -> None:
     if isinstance(fixtures.builds, dict):
         builds_ = list(itertools.chain(*fixtures.builds.values()))
@@ -208,13 +214,13 @@ def pulled_builds(_options: None, fixtures: Fixtures) -> None:
         fixtures.publisher.pull(build_)
 
 
-@depends(tmpdir)
+@fixture("tmpdir")
 def storage(_options: None, fixtures: Fixtures) -> Storage:
     root = fixtures.tmpdir / "root"
     return Storage(root)
 
 
-@depends("tmpdir", "settings")
+@fixture("tmpdir", "settings")
 def jenkins(_options: None, fixtures: Fixtures) -> Jenkins:
     root = fixtures.tmpdir / "root"
     fixed_settings = replace(fixtures.settings, STORAGE_PATH=root)
