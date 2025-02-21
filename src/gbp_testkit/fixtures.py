@@ -57,7 +57,7 @@ def environ(
         "BUILD_PUBLISHER_API_KEY_ENABLE": "no",
         "BUILD_PUBLISHER_API_KEY_KEY": Fernet.generate_key().decode("ascii"),
         "BUILD_PUBLISHER_JENKINS_BASE_URL": "https://jenkins.invalid/",
-        "BUILD_PUBLISHER_RECORDS_BACKEND": options["records_backend"],
+        "BUILD_PUBLISHER_RECORDS_BACKEND": "memory",
         "BUILD_PUBLISHER_STORAGE_PATH": str(fixtures.tmpdir / "root"),
         "BUILD_PUBLISHER_WORKER_BACKEND": "sync",
         "BUILD_PUBLISHER_WORKER_THREAD_WAIT": "yes",
