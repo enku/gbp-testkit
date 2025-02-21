@@ -10,11 +10,11 @@ from unittest_fixtures import where
 logging.basicConfig(handlers=[logging.NullHandler()])
 
 
-@where(environ={"BUILD_PUBLISHER_STORAGE_PATH": "memory"})
+@where(environ={"BUILD_PUBLISHER_RECORDS_BACKEND": "memory"})
 class TestCase(unittest.TestCase):
     pass
 
 
-@where(environ={"BUILD_PUBLISHER_STORAGE_PATH": "django"})
+@where(environ={"BUILD_PUBLISHER_RECORDS_BACKEND": "django"})
 class DjangoTestCase(django.test.TestCase):
     pass
