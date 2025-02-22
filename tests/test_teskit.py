@@ -1,6 +1,6 @@
 """I heard you like tests..."""
 
-# pylint: disable=missing-docstring
+# pylint: disable=missing-docstring,unused-argument
 import datetime as dt
 import tarfile
 from unittest import TestCase, mock
@@ -18,7 +18,7 @@ from gbp_testkit.helpers import MockJenkinsSession, Tree
 
 
 @fixture()
-def builder_fixture(_options: None, _fixtures: Fixtures) -> ArtifactFactory:
+def builder_fixture(_fixtures: Fixtures) -> ArtifactFactory:
     return ArtifactFactory(initial_packages=[])
 
 

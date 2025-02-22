@@ -1,6 +1,6 @@
 """Fixtures"""
 
-# pylint: disable=missing-docstring,cyclic-import
+# pylint: disable=missing-docstring,redefined-outer-name
 import datetime as dt
 import importlib.metadata
 import io
@@ -11,7 +11,6 @@ from contextlib import contextmanager
 from dataclasses import replace
 from functools import partial
 from pathlib import Path
-from typing import Any
 from unittest import mock
 
 import gentoo_build_publisher
@@ -41,18 +40,16 @@ now = partial(dt.datetime.now, tz=dt.UTC)
 
 
 @fixture()
-def tmpdir(_options: None, _fixtures: Fixtures) -> FixtureContext[Path]:
+def tmpdir(_fixtures: Fixtures) -> FixtureContext[Path]:
     with tempfile.TemporaryDirectory() as tempdir:
         yield Path(tempdir)
 
 
 @fixture("tmpdir")
 def environ(
-    options: dict[str, Any] | None, fixtures: Fixtures
+    fixtures: Fixtures, environ=None, clear: bool = False
 ) -> FixtureContext[dict[str, str]]:
-    options = options or {}
-    clear: bool = options.pop("environ_clear", False)
-
+    environ = environ or {}
     mock_environ = {
         "BUILD_PUBLISHER_API_KEY_ENABLE": "no",
         "BUILD_PUBLISHER_API_KEY_KEY": Fernet.generate_key().decode("ascii"),
@@ -61,19 +58,19 @@ def environ(
         "BUILD_PUBLISHER_STORAGE_PATH": str(fixtures.tmpdir / "root"),
         "BUILD_PUBLISHER_WORKER_BACKEND": "sync",
         "BUILD_PUBLISHER_WORKER_THREAD_WAIT": "yes",
-        **options,
+        **environ,
     }
     with mock.patch.dict(os.environ, mock_environ, clear=clear):
         yield mock_environ
 
 
 @fixture("environ")
-def settings(_options: None, _fixtures: Fixtures) -> Settings:
+def settings(_fixtures: Fixtures) -> Settings:
     return Settings.from_environ()
 
 
 @fixture("environ")
-def publisher(_o: None, _f: Fixtures) -> FixtureContext[BuildPublisher]:
+def publisher(_fixtures: Fixtures) -> FixtureContext[BuildPublisher]:
     bp: BuildPublisher = BuildPublisherFactory()
 
     @contextmanager
@@ -88,17 +85,14 @@ def publisher(_o: None, _f: Fixtures) -> FixtureContext[BuildPublisher]:
 
 
 @fixture("publisher")
-def gbp(options: dict[str, Any] | None, _fixtures: Fixtures) -> GBP:
-    options = options or {}
-    user = options.get("user", "test_user")
-
+def gbp(_fixtures: Fixtures, user: str = "test_user") -> GBP:
     return test_gbp(
         "http://gbp.invalid/", auth={"user": user, "api_key": create_user_auth(user)}
     )
 
 
 @fixture()
-def console(_options: None, _fixtures: Fixtures) -> FixtureContext[Console]:
+def console(_fixtures: Fixtures) -> FixtureContext[Console]:
     out = io.StringIO()
     err = io.StringIO()
     theme = Theme(DEFAULT_THEME)
@@ -120,9 +114,9 @@ def console(_options: None, _fixtures: Fixtures) -> FixtureContext[Console]:
 
 
 @fixture("publisher")
-def api_keys(options: dict[str, Any] | None, fixtures: Fixtures) -> list[ApiKey]:
-    options = options or {}
-    names = options.get("api_key_names", ["test_api_key"])
+def api_keys(fixtures: Fixtures, names: list[str] | None = None) -> list[ApiKey]:
+    if names is None:
+        names = ["test_api_key"]
     keys: list[ApiKey] = []
 
     for name in names:
@@ -136,9 +130,9 @@ def api_keys(options: dict[str, Any] | None, fixtures: Fixtures) -> list[ApiKey]
 
 
 @fixture()
-def records_db(options: dict[str, Any], _fixtures: Fixtures) -> RecordDB:
+def records_db(_fixtures: Fixtures, backend: str = "memory") -> RecordDB:
     [module] = importlib.metadata.entry_points(
-        group="gentoo_build_publisher.records", name=options["records_backend"]
+        group="gentoo_build_publisher.records", name=backend
     )
 
     db: RecordDB = module.load().RecordDB()
@@ -146,11 +140,15 @@ def records_db(options: dict[str, Any], _fixtures: Fixtures) -> RecordDB:
 
 
 @fixture()
-def build_model(options: dict[str, Any] | None, _fixtures: Fixtures) -> BuildModel:
-    options = options or {}
-    built: dt.datetime = options.get("built") or now()
-    submitted: dt.datetime = options.get("submitted") or now()
-    completed: dt.datetime = options.get("completed") or now()
+def build_model(
+    _fixtures: Fixtures,
+    built: dt.datetime | None = None,
+    submitted: dt.datetime | None = None,
+    completed: dt.datetime | None = None,
+) -> BuildModel:
+    built = built or now()
+    submitted = submitted or now()
+    completed = completed or now()
 
     bm: BuildModel = BuildModelFactory.create(
         submitted=submitted, completed=completed, built=built
@@ -159,44 +157,43 @@ def build_model(options: dict[str, Any] | None, _fixtures: Fixtures) -> BuildMod
 
 
 @fixture("records_db", "build_model")
-def record(options: dict[str, Any] | None, fixtures: Fixtures) -> BuildRecord:
-    options = options or {}
+def record(fixtures: Fixtures, logs: str = "") -> BuildRecord:
     bm: BuildModel = fixtures.build_model
     db: RecordDB = fixtures.records_db
 
-    if logs := options.get("logs"):
+    if logs:
         BuildLog.objects.create(build_model=bm, logs=logs)
 
     return db.get(Build.from_id(str(fixtures.build_model)))
 
 
 @fixture()
-def clock(options: dt.datetime | None, _fixtures: Fixtures) -> dt.datetime:
-    if options:
-        return options
-    return now()
+def clock(_fixtures: Fixtures, clock: dt.datetime | None = None) -> dt.datetime:
+    return clock if clock else now()
 
 
 @fixture("publisher")
-def client(_options: None, _fixtures: Fixtures) -> Client:
+def client(_fixtures: Fixtures) -> Client:
     return Client()
 
 
 @fixture()
-def build(_options: None, _fixtures: Fixtures) -> Build:
+def build(_fixtures: Fixtures) -> Build:
     return BuildFactory()
 
 
 @fixture()
 def builds(
-    options: dict[str, Any] | None, _fixtures: Fixtures
+    _fixtures: Fixtures,
+    machines: list[str] | None = None,
+    end_time: dt.datetime | None = None,
+    num_days: int = 1,
+    per_day: int = 1,
 ) -> dict[str, list[Build]] | list[Build]:
-    options = options or {}
-    machines = options.get("machines", ["babette"])
-    end_date = options.get("end_time", now())
-    num_days = options.get("num_days", 1)
-    per_day = options.get("per_day", 1)
-    builds_map = BuildFactory.buncha_builds(machines, end_date, num_days, per_day)
+    if machines is None:
+        machines = ["babette"]
+    end_time = end_time or now()
+    builds_map = BuildFactory.buncha_builds(machines, end_time, num_days, per_day)
 
     if len(machines) == 1:
         return builds_map[machines[0]]
@@ -204,7 +201,7 @@ def builds(
 
 
 @fixture("builds", "publisher")
-def pulled_builds(_options: None, fixtures: Fixtures) -> None:
+def pulled_builds(fixtures: Fixtures) -> None:
     if isinstance(fixtures.builds, dict):
         builds_ = list(itertools.chain(*fixtures.builds.values()))
     else:
@@ -215,13 +212,13 @@ def pulled_builds(_options: None, fixtures: Fixtures) -> None:
 
 
 @fixture("tmpdir")
-def storage(_options: None, fixtures: Fixtures) -> Storage:
+def storage(fixtures: Fixtures) -> Storage:
     root = fixtures.tmpdir / "root"
     return Storage(root)
 
 
 @fixture("tmpdir", "settings")
-def jenkins(_options: None, fixtures: Fixtures) -> Jenkins:
+def jenkins(fixtures: Fixtures) -> Jenkins:
     root = fixtures.tmpdir / "root"
     fixed_settings = replace(fixtures.settings, STORAGE_PATH=root)
 
