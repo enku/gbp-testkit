@@ -13,6 +13,7 @@ import gbpcli
 from django.test.client import Client
 from gbpcli.config import AuthDict, Config
 from gbpcli.gbp import GBP
+from gbpcli.types import Console
 from gentoo_build_publisher import publisher
 from gentoo_build_publisher.cli import apikey
 from gentoo_build_publisher.jenkins import (
@@ -281,3 +282,8 @@ def parse_args(cmdline: str) -> argparse.Namespace:
     parser = gbpcli.build_parser(Config(url="http://gbp.invalid/"))
 
     return parser.parse_args(args[1:])
+
+
+def print_command(cmdline: str, console: Console) -> None:
+    """Pretty print the cmdline to console"""
+    console.out.print(f"[green]$ [/green]{cmdline}")
