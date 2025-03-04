@@ -620,7 +620,7 @@ files = [
 
 [[package]]
 name = "gbpcli"
-version = "2.4.1"
+version = "2.5.0"
 requires_python = ">=3.11"
 summary = "Gentoo Build Publisher Command-Line Interface"
 groups = ["dev"]
@@ -628,18 +628,19 @@ dependencies = [
     "argcomplete>=3.2.1",
     "distutils-strtobool>=0.1.0",
     "platformdirs>=4.2.0",
+    "python-dotenv>=1.0.1",
     "requests",
     "rich>=12.5.1",
     "yarl",
 ]
 files = [
-    {file = "gbpcli-2.4.1-py3-none-any.whl", hash = "sha256:c3f9a1ce1a8e02915c265f83d87ec024ecaef043963dd50387f9811e58691a9a"},
-    {file = "gbpcli-2.4.1.tar.gz", hash = "sha256:f943f4942cfc7d0a95696ab35b726906e0f2c6c396328abf2c9aa136bb49381b"},
+    {file = "gbpcli-2.5.0-py3-none-any.whl", hash = "sha256:2b502c74039eb5c1f522fbb3d2f6e6029b1e0f146b927cfbf95ab6e827628fca"},
+    {file = "gbpcli-2.5.0.tar.gz", hash = "sha256:9b84abb6888a710ad1b527fa0806dda411260fb38829978e262ae88df9c084a3"},
 ]
 
 [[package]]
 name = "gentoo-build-publisher"
-version = "2.4.0rc1"
+version = "2.4.0"
 requires_python = ">=3.11"
 summary = "Gentoo Build Publisher"
 groups = ["dev"]
@@ -649,7 +650,7 @@ dependencies = [
     "celery[msgpack]",
     "cryptography>=42.0.4",
     "django",
-    "gbpcli>=2.4.1",
+    "gbpcli>=2.5.0b1",
     "orjson>=3.9.1",
     "python-dispatch>=0.2.1",
     "requests",
@@ -657,8 +658,8 @@ dependencies = [
     "yarl!=1.9.1",
 ]
 files = [
-    {file = "gentoo_build_publisher-2.4.0rc1-py3-none-any.whl", hash = "sha256:93cad2e9f7cfe7872c4a4d3d0523642f34a233d9259252ab4e91e0b2c3e3c878"},
-    {file = "gentoo_build_publisher-2.4.0rc1.tar.gz", hash = "sha256:4c180987127cafcfa75c2ca9c3140dabb2badcad0e4528f1d4f9366fc4e636af"},
+    {file = "gentoo_build_publisher-2.4.0-py3-none-any.whl", hash = "sha256:544aa5d78b97521676f371d8005ab0fe9c3e84662bf87a930fe2089a8222bdcc"},
+    {file = "gentoo_build_publisher-2.4.0.tar.gz", hash = "sha256:ccc775d70eda5af014ea2770688d008130ebcc74ad4bfdd17aea9960899702c2"},
 ]
 
 [[package]]
@@ -1159,6 +1160,17 @@ files = [
 ]
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.1"
+requires_python = ">=3.8"
+summary = "Read key-value pairs from a .env file and set them as environment variables"
+groups = ["dev"]
+files = [
+    {file = "python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca"},
+    {file = "python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a"},
+]
+
+[[package]]
 name = "requests"
 version = "2.32.3"
 requires_python = ">=3.8"
@@ -1288,21 +1300,21 @@ files = [
 
 [[package]]
 name = "typos"
-version = "1.30.0"
+version = "1.30.1"
 requires_python = ">=3.7"
 summary = "Source Code Spelling Correction"
 groups = ["dev"]
 files = [
-    {file = "typos-1.30.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:46fb93c7fc0ab9bb51e2124e5f1697416453119a1aca4cd16a8115c4e07e11f0"},
-    {file = "typos-1.30.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:f0e60ff3ebfeb9d392165539aae8ae12329364502042760647475b0baa1bfc11"},
-    {file = "typos-1.30.0-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c9fd9df27ebab8b3a7dae09451b9af4609e574717e21014d04e898576e99a9d7"},
-    {file = "typos-1.30.0-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:f066a72dd9b0c8cfe43de88e57fec6bba4419981a264d5a869adb06ee252ddb2"},
-    {file = "typos-1.30.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fc54a9f3485b9a5aac55aa0d15e718fc26e8a20507f3a6b68defaba3ead9d813"},
-    {file = "typos-1.30.0-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:f24e2cc02186f20df05348692c3e76c4e50b996d5ddf0597f080178460596182"},
-    {file = "typos-1.30.0-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:9d69d96fd4daf1a805bef5378428c6ea48a80577b3b8a1bc50350b1435ae467c"},
-    {file = "typos-1.30.0-py3-none-win32.whl", hash = "sha256:a28fda092ae412640b8127a32499bdd1c97ac3249f39a8d88790c2d16c53b94e"},
-    {file = "typos-1.30.0-py3-none-win_amd64.whl", hash = "sha256:00f7679f3a1939ecabe9ae95f4803e551a14ca8cc1b28d194447d87174a93897"},
-    {file = "typos-1.30.0.tar.gz", hash = "sha256:fe20191b791685deef668a52f65f47afe7be410b9218a48f3e7d4bc49200f27c"},
+    {file = "typos-1.30.1-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:cde92c96d894184f6504fa95e8cbe6e9f41dfd20d1b0122711d7b55d528a131e"},
+    {file = "typos-1.30.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:4dd63f7628fcf1ade4f3f0fad0adf360052175b81e9f4616a7fc06ae4db8ae22"},
+    {file = "typos-1.30.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:8d428062921fcdc0e5556c75d5a8ffc8f4834bbc8ecc43cf40aa4c1d661acc78"},
+    {file = "typos-1.30.1-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:d1af0711e5d3a79dc482351e7407c46e97da7dcd9c4040d11b5760c3cca4d914"},
+    {file = "typos-1.30.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a163cc64fd0892c7983c2174ef4a28f5f932b25c1bba947869efc776a21fdca3"},
+    {file = "typos-1.30.1-py3-none-musllinux_1_2_aarch64.whl", hash = "sha256:360776d3402a5240b9d2ba5e82c0691a0a5baf9dba6b1a527a76ecdac5eebeea"},
+    {file = "typos-1.30.1-py3-none-musllinux_1_2_x86_64.whl", hash = "sha256:fe54c4da7daa7cc409fce1822bf1e0693ac945327148a535aba156fe66b43213"},
+    {file = "typos-1.30.1-py3-none-win32.whl", hash = "sha256:a58aab42bb2493237184e8fb81fbae359c42c78e449bf581f6739c56c500d981"},
+    {file = "typos-1.30.1-py3-none-win_amd64.whl", hash = "sha256:bf9db3a8e707efd75ade9dc4a73fdf236552966e2ff4c62fb5d1ec2610cfa705"},
+    {file = "typos-1.30.1.tar.gz", hash = "sha256:db667f665e21488fe588b0b47eb8654bce04b48587ddeb60311b90bbfdac595b"},
 ]
 
 [[package]]
