@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:d7cff0b640499a3b5ccd1206ad7801110e9414370343f87e504663a5fa585a8f"
+content_hash = "sha256:ca7925e447cabd5ec58317f905d43ea2792303f82a1da419878651c98bd9b8c8"
 
 [[metadata.targets]]
 requires_python = ">=3.11"
@@ -640,8 +640,10 @@ files = [
 
 [[package]]
 name = "gentoo-build-publisher"
-version = "2.4.0"
+version = "2.5.0a2.dev17"
 requires_python = ">=3.11"
+git = "https://github.com/enku/gentoo-build-publisher.git"
+revision = "00768a91f2e2c7e08a0f0ac6ddd5ea3259210002"
 summary = "Gentoo Build Publisher"
 groups = ["dev"]
 dependencies = [
@@ -656,10 +658,6 @@ dependencies = [
     "requests",
     "rich>=13.7.0",
     "yarl!=1.9.1",
-]
-files = [
-    {file = "gentoo_build_publisher-2.4.0-py3-none-any.whl", hash = "sha256:544aa5d78b97521676f371d8005ab0fe9c3e84662bf87a930fe2089a8222bdcc"},
-    {file = "gentoo_build_publisher-2.4.0.tar.gz", hash = "sha256:ccc775d70eda5af014ea2770688d008130ebcc74ad4bfdd17aea9960899702c2"},
 ]
 
 [[package]]
